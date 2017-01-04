@@ -1,0 +1,104 @@
+from io import BytesIO
+
+from flask import json, request
+from wtforms import FileField, StringField, HiddenField, IntegerField
+from wtforms.validators import DataRequired
+from wtforms.widgets import HiddenInput
+
+from flask_wtf import FlaskForm
+
+
+class BasicForm(FlaskForm):
+    class Meta:
+        csrf = False
+
+    name = StringField(validators=[DataRequired()])
+    avatar = FileField()
+
+
+def test_populate_from_form(app, client):
+    @app.route('/', methods=['POST'])
+    def index():
+        form = BasicForm()
+        assert form.name.data == 'form'
+
+    client.post('/', data={'name': 'form'})
+
+
+def test_populate_from_files(app, client):
+    @app.route('/', methods=['POST'])
+    def index():
+        form = BasicForm()
+        assert form.avatar.data is not None
+        assert form.avatar.data.filename == 'flask.png'
+
+    client.post('/', data={
+        'name': 'files', 'avatar': (BytesIO(), 'flask.png')
+    })
+
+
+def test_populate_from_json(app, client):
+    @app.route('/', methods=['POST'])
+    def index():
+        form = BasicForm()
+        assert form.name.data == 'json'
+
+    client.post(
+        '/', data=json.dumps({'name': 'json'}),
+        content_type='application/json'
+    )
+
+
+def test_populate_manually(app, client):
+    @app.route('/', methods=['POST'])
+    def index():
+        form = BasicForm(request.args)
+        assert form.name.data == 'args'
+
+    client.post('/', query_string={'name': 'args'})
+
+
+def test_populate_none(app, client):
+    @app.route('/', methods=['POST'])
+    def index():
+        form = BasicForm(None)
+        assert form.name.data is None
+
+    client.post('/', data={'name': 'ignore'})
+
+
+def test_validate_on_submit(app, client):
+    @app.route('/', methods=['POST'])
+    def index():
+        form = BasicForm()
+        assert form.is_submitted()
+        assert not form.validate_on_submit()
+        assert 'name' in form.errors
+
+    client.post('/')
+
+
+def test_no_validate_on_get(app, client):
+    @app.route('/', methods=['POST'])
+    def index():
+        form = BasicForm()
+        assert not form.validate_on_submit()
+        assert 'name' not in form.errors
+        assert form.name.data == 'get'
+
+    client.get('/', data={'name': 'get'})
+
+
+def test_hidden_tag(req_ctx):
+    class F(BasicForm):
+        class Meta:
+            csrf = True
+
+        key = HiddenField()
+        count = IntegerField(widget=HiddenInput())
+
+    f = F()
+    out = f.hidden_tag()
+    assert all(x in out for x in ('csrf_token', 'count', 'key'))
+    assert 'avatar' not in out
+    assert 'csrf_token' not in f.hidden_tag('count', 'key')

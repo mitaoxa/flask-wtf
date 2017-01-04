@@ -1,6 +1,3 @@
-import warnings
-from unittest import TestCase
-
 from wtforms.compat import with_metaclass
 from wtforms.form import FormMeta
 
@@ -8,38 +5,42 @@ from flask_wtf import CsrfProtect, FlaskForm, Form
 from flask_wtf._compat import FlaskWTFDeprecationWarning
 
 
-class TestDeprecated(TestCase):
-    def test_deprecated_form(self):
-        with warnings.catch_warnings():
-            warnings.simplefilter('error', FlaskWTFDeprecationWarning)
+def test_deprecated_form(req_ctx, recwarn):
+    class F(Form):
+        pass
 
-            class F1(Form):
-                pass
+    F()
+    w = recwarn.pop(FlaskWTFDeprecationWarning)
+    assert 'FlaskForm' in str(w.message)
 
-            self.assertRaises(FlaskWTFDeprecationWarning, F1)
 
-            class FMeta(FormMeta):
-                pass
+def test_custom_meta_with_deprecated_form(req_ctx, recwarn):
+    class FMeta(FormMeta):
+        pass
 
-            class F2(with_metaclass(FMeta, Form)):
-                pass
+    class F(with_metaclass(FMeta, Form)):
+        pass
 
-            self.assertRaises(FlaskWTFDeprecationWarning, F2)
+    F()
+    recwarn.pop(FlaskWTFDeprecationWarning)
 
-    def test_deprecated_html5(self):
-        with warnings.catch_warnings():
-            warnings.simplefilter('error', FlaskWTFDeprecationWarning)
-            self.assertRaises(FlaskWTFDeprecationWarning, __import__, 'flask_wtf.html5')
 
-    def test_deprecated_csrf_enabled(self):
-        class F(FlaskForm):
-            pass
+def test_deprecated_html5(recwarn):
+    __import__('flask_wtf.html5')
+    w = recwarn.pop(FlaskWTFDeprecationWarning)
+    assert 'wtforms.fields.html5' in str(w.message)
 
-        with warnings.catch_warnings():
-            warnings.simplefilter('error', FlaskWTFDeprecationWarning)
-            self.assertRaises(FlaskWTFDeprecationWarning, F, csrf_enabled=False)
 
-    def test_deprecated_csrfprotect(self):
-        with warnings.catch_warnings():
-            warnings.simplefilter('error', FlaskWTFDeprecationWarning)
-            self.assertRaises(FlaskWTFDeprecationWarning, CsrfProtect)
+def test_deprecated_csrf_enabled_param(req_ctx, recwarn):
+    class F(FlaskForm):
+        pass
+
+    F(csrf_enabled=False)
+    w = recwarn.pop(FlaskWTFDeprecationWarning)
+    assert 'meta.csrf' in str(w.message)
+
+
+def test_deprecated_csrfprotect(recwarn):
+    CsrfProtect()
+    w = recwarn.pop(FlaskWTFDeprecationWarning)
+    assert 'CSRFProtect' in str(w.message)
