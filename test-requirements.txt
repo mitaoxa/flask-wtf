@@ -1,5 +1,5 @@
 -e .
 flask-babel
 flask-uploads
-nose
+pytest
 coverage
