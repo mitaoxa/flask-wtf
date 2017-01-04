@@ -1,5 +1,5 @@
 -e .
 flask-babel
 flask-uploads
-pytest
+pytest>=3
 coverage
