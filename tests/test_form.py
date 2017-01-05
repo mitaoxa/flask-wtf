@@ -1,11 +1,14 @@
 from io import BytesIO
 
 from flask import json, request
-from wtforms import FileField, StringField, HiddenField, IntegerField
+from wtforms import FileField, HiddenField, IntegerField, StringField
+from wtforms.compat import with_metaclass
+from wtforms.form import FormMeta
 from wtforms.validators import DataRequired
 from wtforms.widgets import HiddenInput
 
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, Form
+from flask_wtf._compat import FlaskWTFDeprecationWarning
 
 
 class BasicForm(FlaskForm):
@@ -102,3 +105,32 @@ def test_hidden_tag(req_ctx):
     assert all(x in out for x in ('csrf_token', 'count', 'key'))
     assert 'avatar' not in out
     assert 'csrf_token' not in f.hidden_tag('count', 'key')
+
+
+def test_deprecated_form(req_ctx, recwarn):
+    class F(Form):
+        pass
+
+    F()
+    w = recwarn.pop(FlaskWTFDeprecationWarning)
+    assert 'FlaskForm' in str(w.message)
+
+
+def test_custom_meta_with_deprecated_form(req_ctx, recwarn):
+    class FMeta(FormMeta):
+        pass
+
+    class F(with_metaclass(FMeta, Form)):
+        pass
+
+    F()
+    recwarn.pop(FlaskWTFDeprecationWarning)
+
+
+def test_deprecated_csrf_enabled(req_ctx, recwarn):
+    class F(FlaskForm):
+        pass
+
+    F(csrf_enabled=False)
+    w = recwarn.pop(FlaskWTFDeprecationWarning)
+    assert 'meta.csrf' in str(w.message)
