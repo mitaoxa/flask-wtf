@@ -163,8 +163,8 @@ Released 2014/03/21
 - ``csrf_token`` for all template types `#112`_.
 - Make FileRequired a subclass of InputRequired `#108`_.
 
-.. _`#108`: https://github.com/lepture/flask-wtf/issues/108
-.. _`#112`: https://github.com/lepture/flask-wtf/issues/112
+.. _`#108`: https://github.com/lepture/flask-wtf/pull/108
+.. _`#112`: https://github.com/lepture/flask-wtf/pull/112
 
 Version 0.9.4
 -------------
@@ -184,8 +184,8 @@ Released 2013/10/02
 - Fix validation of recaptcha when app in testing mode `#89`_.
 - Bugfix for csrf module `#91`_
 
-.. _`#89`: https://github.com/lepture/flask-wtf/issues/89
-.. _`#91`: https://github.com/lepture/flask-wtf/issues/91
+.. _`#89`: https://github.com/lepture/flask-wtf/pull/89
+.. _`#91`: https://github.com/lepture/flask-wtf/pull/91
 
 
 Version 0.9.2
