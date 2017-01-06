@@ -11,10 +11,15 @@ python:
     - 3.6-dev
 
 install:
-    - pip install -r test-requirements.txt
+    - pip install tox
 
 script:
-    - pytest
+    - tox -e py
+
+after_success:
+    - tox -e coverage-report
+    - pip install coveralls
+    - coveralls
 
 notifications:
     email: false

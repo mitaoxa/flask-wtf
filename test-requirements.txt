@@ -1,5 +1,0 @@
--e .
-flask-babel
-flask-uploads
-pytest>=3
-

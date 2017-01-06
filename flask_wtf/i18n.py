@@ -10,10 +10,12 @@
 
 from flask import _request_ctx_stack
 from babel import support
+
 try:
     from flask_babel import get_locale
 except ImportError:
     from flask_babelex import get_locale
+
 try:
     from wtforms.i18n import messages_path
 except ImportError:
