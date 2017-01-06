@@ -42,12 +42,9 @@ class FileRequired(DataRequired):
 
     def __call__(self, form, field):
         if not isinstance(field.data, FileStorage):
-            if self.message is None:
-                message = field.gettext('This field is required.')
-            else:
-                message = self.message
-
-            raise StopValidation(message)
+            raise StopValidation(self.message or field.gettext(
+                'This field is required.'
+            ))
 
 file_required = FileRequired
 

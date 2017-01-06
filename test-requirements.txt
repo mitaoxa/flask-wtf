@@ -2,4 +2,4 @@
 flask-babel
 flask-uploads
 pytest>=3
-coverage
+

@@ -18,7 +18,7 @@ Released 2017-01-06
   (`#264`_)
 - ``CsrfProtect`` protects the ``DELETE`` method by default. (`#264`_)
 - The same CSRF token is generated for the lifetime of a request. It is exposed
-  as ``request.csrf_token`` for use during testing. (`#227`_, `#264`_)
+  as ``g.csrf_token`` for use during testing. (`#227`_, `#264`_)
 - ``CsrfProtect.error_handler`` is deprecated. (`#264`_)
 
     - Handlers that return a response work in addition to those that raise an
