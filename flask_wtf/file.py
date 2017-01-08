@@ -1,6 +1,6 @@
 import warnings
-
 from collections import Iterable
+
 from werkzeug.datastructures import FileStorage
 from wtforms import FileField as _FileField
 from wtforms.validators import DataRequired, StopValidation

@@ -11,7 +11,7 @@ def test_csrf_requires_secret_key(app, req_ctx):
     generate_csrf()
     # fail with no key
     app.secret_key = None
-    pytest.raises(KeyError, generate_csrf)
+    pytest.raises(RuntimeError, generate_csrf)
     # use WTF_CSRF config
     app.config['WTF_CSRF_SECRET_KEY'] = 'wtf_secret'
     generate_csrf()

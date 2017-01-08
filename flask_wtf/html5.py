@@ -1,6 +1,5 @@
-# coding: utf-8
-# flake8: noqa
 import warnings
+
 from flask_wtf._compat import FlaskWTFDeprecationWarning
 
 warnings.warn(FlaskWTFDeprecationWarning(
@@ -9,5 +8,3 @@ warnings.warn(FlaskWTFDeprecationWarning(
     'and "wtforms.widgets.html5".'
 ), stacklevel=2)
 
-from wtforms.widgets.html5 import *
-from wtforms.fields.html5 import *

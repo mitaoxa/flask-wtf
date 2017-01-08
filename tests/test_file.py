@@ -1,5 +1,4 @@
 import pytest
-from flask_uploads import UploadSet, configure_uploads
 from werkzeug.datastructures import FileStorage
 from wtforms import FileField
 
@@ -49,6 +48,9 @@ def test_file_allowed(form):
 
 
 def test_file_allowed_uploadset(app, form):
+    pytest.importorskip('flask_uploads')
+    from flask_uploads import UploadSet, configure_uploads
+
     app.config['UPLOADS_DEFAULT_DEST'] = 'uploads'
     txt = UploadSet('txt', extensions=('txt',))
     configure_uploads(app, (txt,))

@@ -118,7 +118,7 @@ def _get_config(
         value = current_app.config.get(config_name, default)
 
     if required and value is None:
-        raise KeyError(message)
+        raise RuntimeError(message)
 
     return value
 
@@ -286,7 +286,7 @@ class CSRFProtect(object):
         if isinstance(view, string_types):
             view_location = view
         else:
-            view_location = '%s.%s' % (view.__module__, view.__name__)
+            view_location = '.'.join((view.__module__, view.__name__))
 
         self._exempt_views.add(view_location)
         return view
