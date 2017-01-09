@@ -9,15 +9,23 @@ python:
     - 3.4
     - 3.5
     - 3.6
+env:
+    - TOXENV=py,coverage-report
+
+matrix:
+    include:
+        - python: 3.6
+          env: TOXENV=py-babelex,coverage-report
+        - python: 3.6
+          env: TOXENV=py-no-babel,coverage-report
+        - python: 3.6
+          env: TOXENV=docs
 
 install:
     - pip install tox
 
 script:
-    - tox -e py
-
-after_success:
-    - tox -e coverage-report
+    - tox
 
 notifications:
     email: false
