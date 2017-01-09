@@ -16,3 +16,4 @@ _build
 *.egg
 .idea/
 htmlcov/
+.cache/
