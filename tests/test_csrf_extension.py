@@ -55,6 +55,7 @@ def test_protect(app, client, app_ctx):
     assert client.post(
         '/', data={'prefix-csrf_token': token}
     ).status_code == 200
+    assert client.post('/', data={'prefix-csrf_token': ''}).status_code == 400
     assert client.post('/', headers={'X-CSRF-Token': token}).status_code == 200
 
 

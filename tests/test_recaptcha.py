@@ -5,7 +5,7 @@ from markupsafe import Markup
 from flask.ext.wtf._compat import to_bytes
 from flask_wtf import FlaskForm
 from flask_wtf.recaptcha import RecaptchaField
-from flask_wtf.recaptcha.validators import http
+from flask_wtf.recaptcha.validators import http, Recaptcha
 
 
 class RecaptchaForm(FlaskForm):
@@ -144,5 +144,6 @@ def test_request_unmatched_error(monkeypatch):
 
     monkeypatch.setattr(http, 'urlopen', mock_urlopen)
     f = RecaptchaForm()
+    f.recaptcha.validators = [Recaptcha('custom')]
     f.validate()
-    assert f.recaptcha.errors
+    assert f.recaptcha.errors[0] == 'custom'
